@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevSecOps Squad — Autonomous Multi-Agent CI/CD with MCP</title>
+    <meta name="description" content="Autonomous DevSecOps squad utilizing Model Context Protocol (MCP) to safely inspect repositories, analyze code structures, generate patches, and verify via CI/CD gates.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Background Glows -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title-wrap">
+                        <h1 class="brand-title">DevSecOps Squad</h1>
+                        <span class="badge badge-mcp">MCP Native</span>
+                        <span class="badge badge-live" id="system-status-badge">System Ready</span>
+                    </div>
+                    <p class="brand-subtitle">Autonomous Multi-Agent CI/CD Verification & Patch Gate</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="model-indicator">
+                    <span class="indicator-dot"></span>
+                    <span id="active-llm-label">Local Ollama / Autonomous Heuristic</span>
+                </div>
+                <a href="#config-section" class="btn btn-secondary btn-sm">Configure Squad</a>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Column: Controls & Pipeline State -->
+            <div class="dashboard-left">
+                <!-- Launch Card -->
+                <section class="card config-card" id="config-section">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            <h2>Squad Mission Dispatch</h2>
+                        </div>
+                    </div>
+
+                    <form id="dispatch-form" class="config-form">
+                        <div class="form-group">
+                            <label for="repo-url-input">Target Git Repository URL</label>
+                            <div class="input-with-button">
+                                <input type="text" id="repo-url-input" placeholder="https://github.com/org/repo.git or local path" required value="https://github.com/pallets/flask.git">
+                                <button type="button" class="btn btn-outline btn-sm" id="btn-sample-repo">Demo Repo</button>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="provider-select">LLM Engine</label>
+                                <select id="provider-select">
+                                    <option value="ollama" selected>Ollama (Local Weights)</option>
+                                    <option value="openai">OpenAI (GPT-4o / GPT-4o-mini)</option>
+                                    <option value="anthropic">Anthropic (Claude 3.5)</option>
+                                    <option value="heuristic">Autonomous Heuristic Mode</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="model-input">Model Name</label>
+                                <input type="text" id="model-input" value="llama3">
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" id="auto-approve-input">
+                                <span class="checkbox-box"></span>
+                                <span class="checkbox-label">Auto-publish on CI/CD pass (Bypass manual approval)</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" id="btn-launch">
+                            <span class="btn-spinner hidden" id="launch-spinner"></span>
+                            <span id="launch-text">Deploy Autonomous Squad</span>
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Multi-Agent Stepper Tracker -->
+                <section class="card pipeline-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            <h2>Multi-Agent Workflow</h2>
+                        </div>
+                        <span class="step-status-pill" id="current-phase-pill">Idle</span>
+                    </div>
+
+                    <div class="stepper">
+                        <!-- Step 1: Coordinator -->
+                        <div class="step-item" id="step-coord">
+                            <div class="step-indicator">1</div>
+                            <div class="step-content">
+                                <div class="step-title">Coordinator Agent</div>
+                                <div class="step-desc">Task delegation & state planning</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Auditor -->
+                        <div class="step-item" id="step-audit">
+                            <div class="step-indicator">2</div>
+                            <div class="step-content">
+                                <div class="step-title">Auditor Agent (MCP)</div>
+                                <div class="step-desc">Clone repo, AST parsing, SAST & secret audit</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Coder -->
+                        <div class="step-item" id="step-coder">
+                            <div class="step-indicator">3</div>
+                            <div class="step-content">
+                                <div class="step-title">Coder Agent (MCP)</div>
+                                <div class="step-desc">Branching, patch generation & atomic fixes</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Verifier / CI/CD Gate -->
+                        <div class="step-item" id="step-verify">
+                            <div class="step-indicator">4</div>
+                            <div class="step-content">
+                                <div class="step-title">CI/CD Gate Verifier</div>
+                                <div class="step-desc">Test runner, linter verification & regressions</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Approval -->
+                        <div class="step-item" id="step-approval">
+                            <div class="step-indicator">5</div>
+                            <div class="step-content">
+                                <div class="step-title">Supervisor Approval</div>
+                                <div class="step-desc">Human-in-the-loop validation gate</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Publish -->
+                        <div class="step-item" id="step-publish">
+                            <div class="step-indicator">6</div>
+                            <div class="step-content">
+                                <div class="step-title">Origin Push</div>
+                                <div class="step-desc">Published to verified target branch</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CI/CD Gate Metrics Card -->
+                <section class="card cicd-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            <h2>CI/CD Gate Telemetry</h2>
+                        </div>
+                    </div>
+
+                    <div class="gate-grid">
+                        <div class="gate-tile" id="tile-tests">
+                            <div class="gate-tile-header">
+                                <span>Automated Tests</span>
+                                <span class="gate-status-tag" id="tag-tests">Pending</span>
+                            </div>
+                            <div class="gate-value" id="val-tests">--</div>
+                        </div>
+
+                        <div class="gate-tile" id="tile-lint">
+                            <div class="gate-tile-header">
+                                <span>Code Linter</span>
+                                <span class="gate-status-tag" id="tag-lint">Pending</span>
+                            </div>
+                            <div class="gate-value" id="val-lint">--</div>
+                        </div>
+
+                        <div class="gate-tile" id="tile-sast">
+                            <div class="gate-tile-header">
+                                <span>SAST Security</span>
+                                <span class="gate-status-tag" id="tag-sast">Pending</span>
+                            </div>
+                            <div class="gate-value" id="val-sast">--</div>
+                        </div>
+
+                        <div class="gate-tile" id="tile-secrets">
+                            <div class="gate-tile-header">
+                                <span>Secrets Scan</span>
+                                <span class="gate-status-tag" id="tag-secrets">Pending</span>
+                            </div>
+                            <div class="gate-value" id="val-secrets">--</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Live SSE Stream & Diffs -->
+            <div class="dashboard-right">
+                <!-- Human Approval Banner (Shown conditionally) -->
+                <div class="approval-banner hidden" id="approval-banner">
+                    <div class="approval-banner-content">
+                        <div class="approval-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>CI/CD Gate Verification Passed</h3>
+                            <p id="approval-desc">Automated tests and linters passed. Approve pushing changes to origin repository?</p>
+                        </div>
+                    </div>
+                    <div class="approval-actions">
+                        <button type="button" class="btn btn-success" id="btn-approve">Approve & Push</button>
+                        <button type="button" class="btn btn-danger" id="btn-reject">Reject Changes</button>
+                    </div>
+                </div>
+
+                <!-- Tabs: Live SSE Logs vs Patch Diff -->
+                <div class="tabs-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="stream-tab">
+                            <span class="live-dot"></span>
+                            Live Agent Stream (SSE)
+                        </button>
+                        <button class="tab-btn" data-tab="diff-tab">
+                            Automated Patch Diff (<span id="diff-count">0</span>)
+                        </button>
+                        <button class="tab-btn" data-tab="findings-tab">
+                            Security Findings (<span id="findings-count">0</span>)
+                        </button>
+                    </div>
+
+                    <div class="tab-actions">
+                        <label class="autoscroll-toggle">
+                            <input type="checkbox" id="autoscroll-checkbox" checked>
+                            <span>Auto-scroll</span>
+                        </label>
+                        <button class="btn btn-outline btn-xs" id="btn-clear-logs">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Tab 1: Live SSE Log Console -->
+                <div class="tab-pane active" id="stream-tab">
+                    <div class="terminal-card">
+                        <div class="terminal-bar">
+                            <div class="terminal-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <div class="terminal-title" id="terminal-job-title">SSE Transport Channel: Disconnected</div>
+                            <div class="terminal-transport">SSE / HTTP-2</div>
+                        </div>
+                        <div class="terminal-body" id="log-feed">
+                            <div class="log-entry log-system">
+                                <span class="log-time">[00:00:00]</span>
+                                <span class="log-badge badge-sys">SYSTEM</span>
+                                <span class="log-msg">DevSecOps Squad ready. Select a repository and click 'Deploy Autonomous Squad' to begin.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Code Diff Viewer -->
+                <div class="tab-pane" id="diff-tab">
+                    <div class="diff-viewer card">
+                        <div class="diff-header">
+                            <span class="diff-filename" id="diff-filename">Unified Code Changes</span>
+                            <span class="badge badge-diff" id="diff-status-badge">No Changes Yet</span>
+                        </div>
+                        <pre class="diff-body" id="diff-content"><code>// When Coder agent creates patches, line-by-line unified diffs will render here...</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Security Findings -->
+                <div class="tab-pane" id="findings-tab">
+                    <div class="findings-container card">
+                        <div class="findings-header">
+                            <h3>Auditor Security & Quality Findings</h3>
+                            <span class="findings-summary" id="findings-summary-txt">Run an audit to view issues</span>
+                        </div>
+                        <div class="findings-list" id="findings-list">
+                            <div class="empty-state">No audit executed yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
